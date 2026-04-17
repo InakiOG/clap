@@ -47,7 +47,7 @@ class ClapSpotifyPlayerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             audio_path = Path(temp_dir) / "placeholder_audio.wav"
             audio_path.write_bytes(b"audio")
-            which_mock.side_effect = lambda command: "/usr/bin/aplay" if command == "aplay" else None
+            which_mock.side_effect = lambda command: "aplay" if command == "aplay" else None
 
             app = ClapSpotifyPlayer(song_name="Song", placeholder_audio_path=audio_path)
             app.play_local_audio()

@@ -131,6 +131,8 @@ class ClapSpotifyPlayer:
         def audio_callback(indata, _frames, _callback_time, status):
             if status:
                 return
+            if indata.size == 0:
+                return
             volume_norm = float(np.linalg.norm(indata) / np.sqrt(max(indata.size, 1)))
             if volume_norm >= self.clap_threshold:
                 self.handle_clap()
