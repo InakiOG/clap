@@ -128,11 +128,10 @@ class ClapSpotifyPlayer:
         self.ensure_placeholder_audio()
         print("Listening for claps... Press Ctrl+C to stop.")
 
-        def audio_callback(indata, frames, callback_time, status):
-            del frames, callback_time
+        def audio_callback(indata, _frames, _callback_time, status):
             if status:
                 return
-            volume_norm = float(np.linalg.norm(indata) / max(len(indata), 1))
+            volume_norm = float(np.linalg.norm(indata) / np.sqrt(max(indata.size, 1)))
             if volume_norm >= self.clap_threshold:
                 self.handle_clap()
 

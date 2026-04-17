@@ -38,6 +38,25 @@ class ClapSpotifyPlayerTests(unittest.TestCase):
         app.play_local_audio()
         popen_mock.assert_not_called()
 
+    @patch("clap_player.subprocess.Popen")
+    @patch("clap_player.shutil.which")
+    @patch("clap_player.platform.system", return_value="Linux")
+    def test_play_local_audio_linux_uses_aplay(
+        self, _platform_mock, which_mock, popen_mock
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            audio_path = Path(temp_dir) / "placeholder_audio.wav"
+            audio_path.write_bytes(b"audio")
+            which_mock.side_effect = lambda command: "/usr/bin/aplay" if command == "aplay" else None
+
+            app = ClapSpotifyPlayer(song_name="Song", placeholder_audio_path=audio_path)
+            app.play_local_audio()
+
+            popen_mock.assert_called_once()
+            called_args = popen_mock.call_args[0][0]
+            self.assertEqual(called_args[0], "aplay")
+            self.assertEqual(called_args[1], str(audio_path))
+
     def test_handle_clap_respects_cooldown(self) -> None:
         calls = []
         app = ClapSpotifyPlayer(
