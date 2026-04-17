@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import logging
 from datetime import datetime
 import platform
@@ -20,6 +21,14 @@ import pyttsx3
 
 logger = logging.getLogger(__name__)
 DEFAULT_SPOTIFY_TRACK_URL = "https://open.spotify.com/track/39shmbIHICJ2Wxnk1fPSdz?si=c2238860c1314edc"
+
+
+def default_audio_file_path() -> Path:
+    if platform.system() == "Windows":
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            return Path(local_app_data) / "ClapSpotifyPlayer" / "clap_response.wav"
+    return Path.home() / ".clap_spotify_player" / "clap_response.wav"
 
 
 class ClapSpotifyPlayer:
@@ -249,7 +258,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--audio-file",
-        default="placeholder_audio.wav",
+        default=str(default_audio_file_path()),
         help="Path to local synthesized speech played when a clap is detected.",
     )
     parser.add_argument(

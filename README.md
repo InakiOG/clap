@@ -1,33 +1,65 @@
-# clap
+# ClapSpotifyPlayer
 
-Simple Python app that listens for a clap on the microphone and, when detected:
+A Windows app that listens for hand claps on your microphone. When you clap twice, it:
 
-1. Opens Spotify for a default track, unless you pass a custom song.
-2. Plays a locally synthesized voice clip at the same time.
+1. Opens your default Spotify track
+2. Speaks a personalized message with the current time and temperature
 
-## Install
+## Download & Run
+
+**For end users:** See [USER_GUIDE.md](USER_GUIDE.md) for download links and usage instructions.
+
+Available as:
+- **Portable** (no installation): `ClapSpotifyPlayer-Portable.zip` - just unzip and double-click
+- **Installer**: `ClapSpotifyPlayer-Setup.exe` - installs to Start Menu
+
+## For Developers
+
+### Requirements
+
+- Python 3.12+
+- numpy
+- sounddevice
+- pyttsx3
+
+### Install dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-## Usage
+### Build Windows exe
+
+```powershell
+.\build_windows_exe.ps1
+```
+
+Creates: `dist\ClapSpotifyPlayer.exe`
+
+### Build portable package + installer
+
+```powershell
+.\build_windows_package.ps1
+```
+
+Creates:
+- `dist\ClapSpotifyPlayer-Portable.zip` (always)
+- `dist\ClapSpotifyPlayer-Setup.exe` (if Inno Setup is installed)
+
+### Run from source
 
 ```bash
 python clap_player.py
 ```
 
-Optional arguments:
+### Command-line options
 
-- `--song "Never Gonna Give You Up"` to override the default track with a search term, Spotify URI, or Spotify URL.
-- `--audio-file /path/to/file.wav` to use a custom output file for the speech clip.
-- `--speech-text "Playing Never Gonna Give You Up"` to customize the spoken phrase.
-- `--temperature auto` to fetch the real current temperature automatically (default).
-- `--temperature "72 F"` to provide a manual temperature value for the spoken prompt.
-- `--weather-location "London"` to fetch real temperature for a specific location.
-- `--speech-rate 150` to make the voice sound a little more robotic.
-- `--clap-threshold 0.08` to adjust clap sensitivity.
-- `--double-clap-window 0.5` to control how quickly the second clap must arrive.
-- `--simulate-clap` to trigger the clap action immediately (useful for quick manual checks).
+- `--song "Song Name"` - Change the default track
+- `--temperature "72 F"` - Override auto temperature
+- `--weather-location "London"` - Fetch real temperature for a location
+- `--clap-threshold 0.08` - Adjust sensitivity (lower = more sensitive)
+- `--double-clap-window 0.5` - Time between claps
+- `--simulate-clap` - Test without microphone
+- `--debug` - Show debug logs
 
-If the output file does not exist, the app creates a spoken voice clip automatically.
+See `python clap_player.py --help` for all options.
