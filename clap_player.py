@@ -133,7 +133,7 @@ class ClapSpotifyPlayer:
                 return
             if indata.size == 0:
                 return
-            volume_norm = float(np.linalg.norm(indata) / np.sqrt(max(indata.size, 1)))
+            volume_norm = float(np.linalg.norm(indata) / np.sqrt(indata.size))
             if volume_norm >= self.clap_threshold:
                 self.handle_clap()
 
